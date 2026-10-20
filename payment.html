@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loan Calculator</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 480px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 1.25rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        #answer {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #b00020;
+            margin: 0.5rem 0 0;
+        }
+    </style>
+    <script>
+        function calculate() {
+            let principal = Number(document.getElementById("pv").value);
+            let years = Number(document.getElementById("years").value);
+            let annualRate = Number(document.getElementById("rate").value);
+
+            let msg = document.getElementById("msg");
+            let answer = document.getElementById("answer");
+            msg.innerHTML = "";
+            answer.value = "";
+
+            if (principal <= 0 || years <= 0 || annualRate < 0) {
+                msg.innerHTML = '<p class="error">Enter an amount and number of years greater than 0, and an interest rate of 0 or more.</p>';
+                return;
+            }
+
+            let r = annualRate / 100 / 12; // monthly interest rate
+            let n = years * 12;            // number of monthly payments
+            let payment;
+
+            if (r === 0) {
+                payment = principal / n;
+            } else {
+                payment = principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+            }
+
+            answer.value = payment.toLocaleString("en-US", { style: "currency", currency: "USD" });
+        }
+    </script>
+</head>
+
+<body>
+
+    <h3>Loan Calculator</h3>
+
+    <label for="pv">Present value - the amount you wish to borrow ($)</label>
+    <input id="pv" type="number" min="0" step="any">
+
+    <label for="years">Number of years</label>
+    <input id="years" type="number" min="0" step="any">
+
+    <label for="rate">% - annual interest rate</label>
+    <input id="rate" type="number" min="0" step="any">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="msg"></div>
+
+    <label for="answer">Your monthly payment is</label>
+    <input id="answer" type="text" readonly>
+
+</body>
+
+</html>

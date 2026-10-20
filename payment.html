@@ -33,43 +33,35 @@
             cursor: pointer;
         }
 
-        #answer {
+        #ans {
+            margin-top: 1.25rem;
+            padding: 0.75rem;
             background: #f2f2f2;
             font-weight: bold;
-        }
-
-        .error {
-            color: #b00020;
-            margin: 0.5rem 0 0;
         }
     </style>
     <script>
         function calculate() {
-            let principal = Number(document.getElementById("pv").value);
+            let PV = Number(document.getElementById("pv").value);
             let years = Number(document.getElementById("years").value);
             let annualRate = Number(document.getElementById("rate").value);
 
-            let msg = document.getElementById("msg");
-            let answer = document.getElementById("answer");
-            msg.innerHTML = "";
-            answer.value = "";
-
-            if (principal <= 0 || years <= 0 || annualRate < 0) {
-                msg.innerHTML = '<p class="error">Enter an amount and number of years greater than 0, and an interest rate of 0 or more.</p>';
+            if (PV <= 0 || years <= 0 || annualRate < 0) {
+                document.getElementById("ans").innerHTML = "Enter an amount and number of years greater than 0, and an interest rate of 0 or more.";
                 return;
             }
 
             let r = annualRate / 100 / 12; // monthly interest rate
             let n = years * 12;            // number of monthly payments
-            let payment;
+            let P;
 
             if (r === 0) {
-                payment = principal / n;
+                P = PV / n;
             } else {
-                payment = principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+                P = PV * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
             }
 
-            answer.value = payment.toLocaleString("en-US", { style: "currency", currency: "USD" });
+            document.getElementById("ans").innerHTML = "IF you take a loan for $" + PV + " your payment will be $" + P.toFixed(2);
         }
     </script>
 </head>
@@ -89,10 +81,7 @@
 
     <button onclick="calculate()">Calculate</button>
 
-    <div id="msg"></div>
-
-    <label for="answer">Your monthly payment is</label>
-    <input id="answer" type="text" readonly>
+    <div id="ans"></div>
 
 </body>
 
